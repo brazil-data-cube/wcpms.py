@@ -6,7 +6,7 @@ DIR = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(DIR, "VERSION"), "r") as file:
     VERSION = file.read()
 
-with open(os.path.join(DIR, "README.md"), "r") as file:
+with open(os.path.join(DIR, "README.rst"), "r") as file:
     LONG_DESCRIPTION = file.read()
 
 long_description = LONG_DESCRIPTION,
