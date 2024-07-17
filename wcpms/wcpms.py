@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
+from IPython.core.display import display, HTML
 from datetime import datetime
 
 class WCPMS:
@@ -106,3 +107,25 @@ def plot_phenometrics(cube, ds_phenos):
     plt.ylabel('Vegetation Health (NDVI)')
     plt.xlabel('Date')
     plt.legend(loc="upper left")
+
+def get_collections(url):
+    url_suffix = '/list_collections'
+
+    data = requests.get(url + url_suffix) 
+    data_json = data.json()
+
+    return data_json['coverages']
+
+def get_description(url):
+
+    url_suffix = '/describe'
+
+    data = requests.get(url + url_suffix) 
+    data_json = data.json()
+
+    html_table = '<tr>'+'<td>Code</td>'+'<td>Name</td>'+'<td>Description</td>'+'<td>Method</td>'+'<td>Value</td>'+'<td>Time</td>'+'</tr>'
+    
+    for item in data_json['description']:
+        html_table+='<tr>'+'<td>'+item['Code']+'</td>'+'<td>'+item['Name']+'</td>'+'<td>'+item['Description']+'</td>'+'<td>'+item['Method']+'</td>'+'<td>'+str(item['Value'])+'</td>'+'<td>'+str(item['Time'])+'</td>'+'</tr>'
+    
+    return display(HTML('<table style="width:60%">'+html_table+'</table>')) 
