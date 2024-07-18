@@ -123,9 +123,9 @@ def get_description(url):
     data = requests.get(url + url_suffix) 
     data_json = data.json()
 
-    html_table = '<tr>'+'<td>Code</td>'+'<td>Name</td>'+'<td>Description</td>'+'<td>Method</td>'+'<td>Value</td>'+'<td>Time</td>'+'</tr>'
+    html_table = '<tr>'+'<td><b>Code</b></td>'+'<td><b>Name</b></td>'+'<td><b>Description</b></td>'+'<td><b>Method</b></td>'+'<td><b>Value</b></td>'+'<td><b>Time</b></td>'+'</tr>'
     
     for item in data_json['description']:
         html_table+='<tr>'+'<td>'+item['Code']+'</td>'+'<td>'+item['Name']+'</td>'+'<td>'+item['Description']+'</td>'+'<td>'+item['Method']+'</td>'+'<td>'+str(item['Value'])+'</td>'+'<td>'+str(item['Time'])+'</td>'+'</tr>'
     
-    return display(HTML('<table style="width:60%">'+html_table+'</table>')) 
+    return display(HTML('<table style="width:90%;margin-left:5%;margin-right:5%;margin-top:5%;">'+html_table+'</table>')) 
