@@ -29,6 +29,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+notebooks/shp
 downloads/
 eggs/
 .eggs/

@@ -27,7 +27,8 @@ setup(
         "matplotlib==3.9.0",
         "scipy==1.13.1",
         "datetime==5.5",
-        "ipython==8.26.0"
+        "ipython==8.26.0",
+        "geopandas==1.0.1 "
     ],
     long_description = LONG_DESCRIPTION,
     setup_requires=['pytest-runner'],

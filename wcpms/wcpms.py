@@ -1,6 +1,9 @@
+import os
+import json
 import urllib
 import requests
 import pandas as pd
+import geopandas as gpd
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 from IPython.core.display import display, HTML
@@ -30,22 +33,22 @@ class WCPMS:
 
 def get_phenometrics(url, cube, latitude, longitude):
 
-        query = dict(
-            collection=cube['collection'],
-            band=cube['band'],
-            start_date=cube['start_date'],
-            end_date=cube['end_date'],
-            freq=cube['freq'],
-            latitude=latitude,
-            longitude=longitude,
-        )
+    query = dict(
+        collection=cube['collection'],
+        band=cube['band'],
+        start_date=cube['start_date'],
+        end_date=cube['end_date'],
+        freq=cube['freq'],
+        latitude=latitude,
+        longitude=longitude,
+    )
 
-        url_suffix = '/phenometrics?'+urllib.parse.urlencode(query)
+    url_suffix = '/phenometrics?'+urllib.parse.urlencode(query)
 
-        data = requests.get(url + url_suffix) 
-        data_json = data.json()
+    data = requests.get(url + url_suffix) 
+    data_json = data.json()
 
-        return data_json['result']
+    return data_json['result']
     
 def cube_query(collection, start_date, end_date, freq, band=None):
     """An object that contains the information associated with a collection 
@@ -129,3 +132,33 @@ def get_description(url):
         html_table+='<tr>'+'<td>'+item['Code']+'</td>'+'<td>'+item['Name']+'</td>'+'<td>'+item['Description']+'</td>'+'<td>'+item['Method']+'</td>'+'<td>'+str(item['Value'])+'</td>'+'<td>'+str(item['Time'])+'</td>'+'</tr>'
     
     return display(HTML('<table style="width:90%;margin-left:5%;margin-right:5%;margin-top:5%;">'+html_table+'</table>')) 
+
+def gpd_shapefile(shapefile_dir):
+    data = gpd.read_file(os.path.join(shapefile_dir))
+    return data
+
+def gdf_to_geojson(df):
+    return json.loads(df.to_json())["features"][0]['geometry']
+
+def get_phenometrics_region(url, cube, geom, method, distance=None, plot_size=None):
+
+    body = dict(
+        collection=cube['collection'],
+        band=cube['band'],
+        start_date=cube['start_date'],
+        end_date=cube['end_date'],
+        freq=cube['freq'],
+        geom=geom,
+        method = dict(
+            grid_type = method,
+            plot_size = plot_size,
+            distance = distance
+        )
+    )
+
+    url_suffix = '/phenometrics'
+
+    data = requests.post(url + url_suffix, json = body) 
+    data_json = data.json()
+
+    return data_json['result']
