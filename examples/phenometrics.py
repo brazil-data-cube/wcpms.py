@@ -21,7 +21,7 @@
 from wcpms import *
 
 # Defines URL of a instance of the WCPMS
-wcpms_url = 'http://127.0.0.1:5000/'
+wcpms_url = 'https://data.inpe.br/bdc/wcpms'
 
 # Defines a data cube query from Brazil Data Cube (BDC) 
 datacube = cube_query(

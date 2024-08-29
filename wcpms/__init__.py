@@ -1,1 +1,1 @@
-from .wcpms import WCPMS, cube_query, get_phenometrics, plot_phenometrics
+from .wcpms import WCPMS, cube_query, get_phenometrics, plot_phenometrics, get_collections, get_description, gpd_shapefile, get_phenometrics_region, gdf_to_geojson
