@@ -30,6 +30,8 @@ build/
 develop-eggs/
 dist/
 notebooks/shp
+notebooks/glebas
+notebooks/wcpms-advanced.ipynb
 downloads/
 eggs/
 .eggs/
