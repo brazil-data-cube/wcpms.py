@@ -176,8 +176,8 @@ def plot_advanced_phenometrics(cube, ds_phenos, shape):
     plt.plot(vos_time, p['vos_v'], 'go', label='_nolegend_')
     plt.annotate('VOS', [vos_time, p['vos_v']])
 
-    plt.axvspan(sos_time-timedelta(days=8), sos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB')
-    plt.axvspan(eos_time-timedelta(days=8), eos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB', label="Uncertainty")
+    plt.axvspan(sos_time-timedelta(days=16), sos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB')
+    plt.axvspan(eos_time-timedelta(days=16), eos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB', label="Uncertainty")
     
     growing_start = shape.loc[0, 'ope_inicio_plantio']
     growing_end = shape.loc[0, 'ope_fim_plantio']
