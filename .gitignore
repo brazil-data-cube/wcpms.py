@@ -30,6 +30,7 @@ build/
 develop-eggs/
 dist/
 notebooks/shp
+notebooks/glebas
 downloads/
 eggs/
 .eggs/

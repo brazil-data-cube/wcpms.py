@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 from IPython.core.display import display, HTML
 from datetime import datetime
+from datetime import timedelta
 
 class WCPMS:
     """Implement a client for WCPMS.
@@ -133,12 +134,75 @@ def get_description(url):
     
     return display(HTML('<table style="width:90%;margin-left:5%;margin-right:5%;margin-top:5%;">'+html_table+'</table>')) 
 
-def gpd_shapefile(shapefile_dir):
+def gpd_read_file(shapefile_dir):
     data = gpd.read_file(os.path.join(shapefile_dir))
     return data
 
 def gdf_to_geojson(df):
     return json.loads(df.to_json())["features"][0]['geometry']
+
+def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing=None, end_sowing=None, start_harvesting=None, end_harvesting=None):
+
+    ts = [] 
+    tl = []
+    if (ds_phenos['timeseries']):
+        ts = ds_phenos['timeseries']   
+        tl = ds_phenos['timeline']   
+    else:
+        ts = ds_phenos['timeseries']['values'] 
+        tl = ds_phenos['timeseries']["timeline"]
+
+    dates_datetime64 = pd.date_range(pd.to_datetime(cube['start_date'], format='%Y-%m-%d'), periods=len(tl), freq="16D")
+
+    y_new = smooth_timeseries(ts=ts, method='savitsky', window_length=2)
+
+    plt.plot(dates_datetime64, ts, color='blue', label='Raw NDVI') 
+    plt.plot(dates_datetime64, y_new, color='red', label='Smooth NDVI') 
+
+    p = ds_phenos["phenometrics"]
+
+    sos_time = datetime.strptime(p['sos_t'], '%Y-%m-%dT00:00:00')
+    plt.plot(sos_time, p['sos_v'], 'go', label='_nolegend_')
+    plt.annotate('SOS', [sos_time, p['sos_v']])
+
+    eos_time = datetime.strptime(p['eos_t'], '%Y-%m-%dT00:00:00')
+    plt.plot(eos_time, p['eos_v'], 'go', label='_nolegend_')
+    plt.annotate('EOS', [eos_time, p['eos_v']])
+
+    pos_time = datetime.strptime(p['pos_t'], '%Y-%m-%dT00:00:00')
+    plt.plot(pos_time, p['pos_v'], 'go', label='_nolegend_')
+    plt.annotate('POS', [pos_time, p['pos_v']])
+
+    vos_time = datetime.strptime(p['vos_t'], '%Y-%m-%dT00:00:00')
+    plt.plot(vos_time, p['vos_v'], 'go', label='_nolegend_')
+    plt.annotate('VOS', [vos_time, p['vos_v']])
+
+    plt.axvspan(sos_time-timedelta(days=16), sos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB')
+    plt.axvspan(eos_time-timedelta(days=16), eos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB', label="Uncertainty")
+
+    if (start_sowing and end_sowing):
+        v_start_sowing = shape.loc[0, start_sowing]
+        v_end_sowing = shape.loc[0, end_sowing]
+        plt.axvspan(v_start_sowing, v_end_sowing, color='#099c00', alpha=0.4, label=start_sowing.replace("_inicio", ""))
+    
+    if (start_harvesting and end_harvesting):
+        v_start_harvesting = shape.loc[0, start_harvesting]  
+        v_end_harvesting = shape.loc[0, end_harvesting]
+        plt.axvspan(v_start_harvesting, v_end_harvesting, color='#e3c913', alpha=0.4, label=end_harvesting.replace("_fim", ""))
+
+    plt.ylabel('Vegetation Health (NDVI)')
+    plt.xlabel('Date')
+
+    plt.legend(loc='center right', bbox_to_anchor=(1.35, 0.5))
+
+def plot_points_region(polygon, phenos):
+    x, y = [],[]
+    for p in phenos:
+        x.append(p["point"][0])
+        y.append(p["point"][1])
+    gpd.GeoSeries(polygon["geometry"]).plot(color='red', alpha=0.25)
+    plt.scatter(x,y) 
+    plt.show() 
 
 def get_phenometrics_region(url, cube, geom, method, distance=None, plot_size=None):
 
