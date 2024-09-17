@@ -141,7 +141,7 @@ def gpd_read_file(shapefile_dir):
 def gdf_to_geojson(df):
     return json.loads(df.to_json())["features"][0]['geometry']
 
-def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing, end_sowing, start_harvesting, end_harvesting):
+def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing=None, end_sowing=None, start_harvesting=None, end_harvesting=None):
 
     ts = [] 
     tl = []
@@ -179,14 +179,16 @@ def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing, end_sowing,
 
     plt.axvspan(sos_time-timedelta(days=16), sos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB')
     plt.axvspan(eos_time-timedelta(days=16), eos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB', label="Uncertainty")
-    
-    v_start_sowing = shape.loc[0, start_sowing]
-    v_end_sowing = shape.loc[0, end_sowing]
-    v_start_harvesting = shape.loc[0, start_harvesting]  
-    v_end_harvesting = shape.loc[0, end_harvesting]
 
-    plt.axvspan(v_start_sowing, v_end_sowing, color='#099c00', alpha=0.4, label=start_sowing.replace("_inicio", ""))
-    plt.axvspan(v_start_harvesting, v_end_harvesting, color='#e3c913', alpha=0.4, label=end_harvesting.replace("_fim", ""))
+    if (start_sowing and end_sowing):
+        v_start_sowing = shape.loc[0, start_sowing]
+        v_end_sowing = shape.loc[0, end_sowing]
+        plt.axvspan(v_start_sowing, v_end_sowing, color='#099c00', alpha=0.4, label=start_sowing.replace("_inicio", ""))
+    
+    if (start_harvesting and end_harvesting):
+        v_start_harvesting = shape.loc[0, start_harvesting]  
+        v_end_harvesting = shape.loc[0, end_harvesting]
+        plt.axvspan(v_start_harvesting, v_end_harvesting, color='#e3c913', alpha=0.4, label=end_harvesting.replace("_fim", ""))
 
     plt.ylabel('Vegetation Health (NDVI)')
     plt.xlabel('Date')
