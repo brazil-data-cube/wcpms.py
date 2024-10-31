@@ -16,9 +16,9 @@
     along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 
 
-=================================================
+============================================================
 Python Client Library for Web Crop Phenology Metrics Service
-=================================================
+============================================================
 
 
 .. image:: https://img.shields.io/badge/License-GPLv3-blue.svg
@@ -77,7 +77,7 @@ See `INSTALL.rst <./INSTALL.rst>`_.
 
 
 Using WCPMS in the Command Line
-==============================
+===============================
 
 See `CLI.rst <./CLI.rst>`_.
 
@@ -85,8 +85,7 @@ See `CLI.rst <./CLI.rst>`_.
 Documentation
 =============
 
-
-WIP
+See https://wcpms.readthedocs.io/en/latest.
 
 
 References

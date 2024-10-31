@@ -17,6 +17,6 @@
 
 
 Cube
-----------
+----
 
 .. autofunction:: wcpms.wcpms.cube_query

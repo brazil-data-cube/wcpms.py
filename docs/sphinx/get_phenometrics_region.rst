@@ -17,7 +17,7 @@
 
 
 Phenometrics (region)
-----
+---------------------
 
 
 .. autofunction:: wcpms.wcpms.get_phenometrics_region

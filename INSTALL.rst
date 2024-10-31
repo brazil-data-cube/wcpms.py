@@ -19,7 +19,7 @@
 Installation
 ============
 
-``wlts.py`` depends essentially on `Requests <https://requests.readthedocs.io/en/master/>`_. Please, read the instructions below in order to install ``wcpms.py``.
+``wcpms.py`` depends essentially on `Requests <https://requests.readthedocs.io/en/master/>`_. Please, read the instructions below in order to install ``wcpms.py``.
 
 
 Development Installation

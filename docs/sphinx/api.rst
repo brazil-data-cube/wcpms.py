@@ -17,7 +17,7 @@
 
 
 WCPMS API
-========
+=========
 
 
 .. automodule:: wcpms.wcpms

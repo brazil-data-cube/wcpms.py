@@ -17,6 +17,6 @@
 
 
 Phenometrics
-----------
+------------
 
 .. autofunction:: wcpms.wcpms.get_phenometrics

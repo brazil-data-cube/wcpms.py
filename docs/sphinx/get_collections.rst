@@ -17,6 +17,6 @@
 
 
 List Collections
-----------
+----------------
 
 .. autofunction:: wcpms.wcpms.get_collections

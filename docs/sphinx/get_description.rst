@@ -17,7 +17,7 @@
 
 
 Describe
-----------
+--------
 
 
 .. autofunction:: wcpms.wcpms.get_description
