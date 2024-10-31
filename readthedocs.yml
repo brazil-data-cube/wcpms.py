@@ -16,25 +16,23 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 #
 
-exclude doc/sphinx/_build
-include *.rst
-include *.sh
-include *.txt
-include LICENSE
-include pytest.ini
-recursive-exclude docs/sphinx/_build *
-recursive-include docs *.bat
-recursive-include docs *.css
-recursive-include docs *.py
-recursive-include docs *.rst
-recursive-include docs *.ico
-recursive-include docs *.png
-recursive-include docs Makefile
-recursive-include examples *.py
-recursive-include examples *.ipynb
-recursive-include examples *.json
-recursive-include examples *.png
-recursive-include tests *.py
-recursive-include tests *.json
-recursive-include WCPMS *.html
+version: 2
 
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.11"
+
+
+sphinx:
+    configuration: docs/sphinx/conf.py
+
+formats: []
+
+python:
+
+    install:
+        - method: pip
+          path: .
+          extra_requirements:
+              - docs
