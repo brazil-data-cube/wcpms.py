@@ -19,7 +19,7 @@
 Installation
 ============
 
-``wlts.py`` depends essentially on `Requests <https://requests.readthedocs.io/en/master/>`_. Please, read the instructions below in order to install ``wcpms.py``.
+``wcpms.py`` depends essentially on `Requests <https://requests.readthedocs.io/en/master/>`_. Please, read the instructions below in order to install ``wcpms.py``.
 
 
 Development Installation
@@ -63,9 +63,23 @@ Install in development mode::
 Run the Tests
 +++++++++++++
 
-WIP
+Run the tests::
+
+    ./run-test.sh
 
 Build the Documentation
 +++++++++++++++++++++++
 
-WIP
+You can generate the documentation based on Sphinx with the following command::
+
+    sphinx-build docs/sphinx docs/sphinx/_build/html
+
+
+The above command will generate the documentation in HTML and it will place it under::
+
+    docs/sphinx/_build/html/
+
+
+You can open the above documentation in your favorite browser, as::
+
+    firefox docs/sphinx/_build/html/index.html
