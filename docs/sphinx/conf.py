@@ -24,7 +24,7 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'wcpms.py'
+project = 'wcpms'
 copyright = '2024, Gabriel Sansigolo'
 author = 'Gabriel Sansigolo'
 release = '0.0.1'
