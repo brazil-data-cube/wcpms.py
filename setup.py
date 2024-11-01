@@ -31,6 +31,29 @@ with open(os.path.join(DIR, "README.rst"), "r") as file:
 
 long_description = LONG_DESCRIPTION,
 
+docs_require = [
+    'Sphinx>=2.2',
+    'sphinx_rtd_theme',
+    'sphinx-copybutton',
+]
+
+install_requires = [
+        "urllib3==2.2.2",
+        "requests==2.32.3",
+        "pandas==2.2.2",
+        "matplotlib==3.9.0",
+        "scipy==1.13.1",
+        "datetime==5.5",
+        "ipython==8.26.0",
+        "geopandas==1.0.1 "
+]
+
+extras_require = {
+    'docs': docs_require,
+}
+
+extras_require['all'] = [ req for exts, reqs in extras_require.items() for req in reqs ]
+
 setup(
     name='wcpms',
     packages=find_packages(),
@@ -40,16 +63,8 @@ setup(
     author='Gabriel Sansigolo',
     author_email = "gabrielsansigolo@gmail.com",
     url = "https://github.com/GSansigolo/wcpms.py",
-    install_requires= [
-        "urllib3==2.2.2",
-        "requests==2.32.3",
-        "pandas==2.2.2",
-        "matplotlib==3.9.0",
-        "scipy==1.13.1",
-        "datetime==5.5",
-        "ipython==8.26.0",
-        "geopandas==1.0.1 "
-    ],
+    extras_require=extras_require,
+    install_requires=install_requires,
     long_description = LONG_DESCRIPTION,
     setup_requires=['pytest-runner'],
     tests_require=['pytest==4.4.1'],
