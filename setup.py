@@ -1,6 +1,6 @@
 #
 #    This file is part of Python Client Library for WCPMS.
-#    Copyright (C) 2024 INPE.
+#    Copyright (C) 2025 INPE.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -60,9 +60,9 @@ setup(
     include_package_data=True,
     version = VERSION,
     description='Python Client of the Web Crop Phenological Metrics Service for Earth Observation Data Cubes',
-    author='Gabriel Sansigolo',
-    author_email = "gabrielsansigolo@gmail.com",
-    url = "https://github.com/GSansigolo/wcpms.py",
+    author='Brazil Data Cube Team',
+    author_email = "bdc.team@inpe.br",
+    url = "https://github.com/brazil-data-cube/wcpms.py",
     extras_require=extras_require,
     install_requires=install_requires,
     long_description = LONG_DESCRIPTION,
