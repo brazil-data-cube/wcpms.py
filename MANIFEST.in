@@ -21,6 +21,7 @@ include *.rst
 include *.sh
 include *.txt
 include LICENSE
+include VERSION
 include pytest.ini
 recursive-exclude docs/sphinx/_build *
 recursive-include docs *.bat
