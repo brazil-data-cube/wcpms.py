@@ -41,7 +41,7 @@ install_requires = [
         "urllib3==2.2.2",
         "requests==2.32.3",
         "pandas==2.2.2",
-        "matplotlib==3.9.0",
+        "plotly==6.0.1",
         "scipy==1.13.1",
         "datetime==5.5",
         "ipython==8.26.0",
