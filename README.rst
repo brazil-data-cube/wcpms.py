@@ -75,12 +75,6 @@ Installation
 See `INSTALL.rst <https://github.com/brazil-data-cube/wcpms.py/blob/master/INSTALL.rst>`_.
 
 
-Using WCPMS in the Command Line
-===============================
-
-See `CLI.rst <https://github.com/brazil-data-cube/wcpms.py/blob/master/CLI.rst>`_.
-
-
 Documentation
 =============
 
