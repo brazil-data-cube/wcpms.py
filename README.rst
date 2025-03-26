@@ -72,13 +72,13 @@ We created the wcpms.py library from scratch to facilitate phenology extraction 
 Installation
 ============
 
-See `INSTALL.rst <./INSTALL.rst>`_.
+See `INSTALL.rst <https://github.com/brazil-data-cube/wcpms.py/blob/master/INSTALL.rst>`_.
 
 
 Using WCPMS in the Command Line
 ===============================
 
-See `CLI.rst <./CLI.rst>`_.
+See `CLI.rst <https://github.com/brazil-data-cube/wcpms.py/blob/master/CLI.rst>`_.
 
 
 Documentation
