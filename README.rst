@@ -1,6 +1,6 @@
 ..
     This file is part of Python Client Library for WCPMS.
-    Copyright (C) 2024 INPE.
+    Copyright (C) 2025 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -54,11 +54,12 @@ Python Client Library for Web Crop Phenology Metrics Service
 About
 =====
 
-The Web Crop Phenology Metrics Service (WCPMS) is an web service for calculating phenological metrics based on Phenolopy library and EO Data from the Brazil Data Cube (BDC). It will allow analysts to calculate phenological metrics from data cubes without downloading big EO datasets to their personal computers.
+Called Web Crop Phenology Metrics Service (WCPMS) the software extracts phenological metrics from big EO image collections, modeled as multidimensional data cubes, produced by the BDC project of INPE. 
 
-The software run on the server side, so it doesn't require package installation. Through a simple API, analysts indicate a spatial location or region and the WCPMS will retrieve the phenological metrics associated with spatial locations by calculating it using time series. 
+It allows analysts to calculate phenological metrics on cloud. The opposite of the on-premises established algorithms, so with no need to download big EO data sets on their personal computers. 
 
-The WCPMS is a web service, and it can be accessed through its API. To facilitate these operations, we have developed an official client—a simple Python library. The WCPMS Client is composed of a group of functions, the main ones are:
+We created the wcpms.py library from scratch to facilitate phenology extraction operations. This li
+brary was developed to be interoperable with other Python libraries, thus enabling users to integrate established libraries into their own workflows for pre- or post-processing and analysis. The wcpms.py library has a group of functions, the main ones are:
 
 - ``get_collections``: returns in list format the unique identifier of each of the data cubes available in the BDC’s SpatioTemporal Asset Catalogs (STAC).
 
@@ -66,8 +67,7 @@ The WCPMS is a web service, and it can be accessed through its API. To facilitat
 
 - ``get_phenometrics``: returns in dictionary form all the phenological metrics calculated for the given spatial location.
 
-- ``get_phenometrics_region``: returns in list form dictionary with the phenological metrics calculated for each of the given spatial location based on selected region methodology (all, systematic grid or random grid).
-
+- ``get_phenometrics_region``: returns in list format the phenological metrics calculated for each pixel centers within the boundaries of the given region using satellite images time series.
 
 
 Installation
@@ -100,7 +100,7 @@ License
 
 
 .. admonition::
-    Copyright (C) 2024 INPE.
+    Copyright (C) 2025 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
