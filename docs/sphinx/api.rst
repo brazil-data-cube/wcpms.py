@@ -30,6 +30,7 @@ WCPMS API
     get_collections
     cube_query
     get_phenometrics
+    get_timeseries_region
     get_phenometrics_region
     get_description
 

@@ -1,6 +1,6 @@
 ..
     This file is part of Python Client Library for WCPMS.
-    Copyright (C) 2024 INPE.
+    Copyright (C) 2025 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,4 +16,8 @@
     along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 
 
-.. include:: ../../CLI.rst
+Timeseries (region)
+---------------------
+
+
+.. autofunction:: wcpms.wcpms.get_timeseries_region

@@ -1,6 +1,6 @@
 ..
     This file is part of Python Client Library for WCPMS.
-    Copyright (C) 2024 INPE.
+    Copyright (C) 2025 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ Documentation
    :caption: Contents:
 
    installation
-   cli
    examples
    api
    repository

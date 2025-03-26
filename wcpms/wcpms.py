@@ -21,14 +21,18 @@
 import os
 import json
 import urllib
+import warnings
 import requests
 import pandas as pd
 import geopandas as gpd
-import matplotlib.pyplot as plt
+import plotly.express as px
+from datetime import timedelta
+import plotly.graph_objects as go
 from scipy.signal import savgol_filter
 from IPython.core.display import display, HTML
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime as dt
+
+warnings.filterwarnings("ignore")
 
 class WCPMS:
     """Implement a client for WCPMS.
@@ -160,37 +164,192 @@ def smooth_timeseries(ts, method='savitsky', window_length=3, polyorder=1):
     return smooth_ts
 
 def plot_phenometrics(cube, ds_phenos):
-    dates_datetime64 = pd.date_range(pd.to_datetime(cube['start_date'], format='%Y-%m-%d'), periods=len(ds_phenos['timeseries']["timeline"]), freq="16D")
 
-    y_new = smooth_timeseries(ts=ds_phenos['timeseries']['values'], method='savitsky', window_length=2)
+    y_new = smooth_timeseries(ts=ds_phenos['timeseries']['values'], method='savitsky', window_length=3)
+    
+    timeline = ds_phenos['timeseries']['timeline']
+    timeseries = ds_phenos['timeseries']['values']
+    phenometrics = ds_phenos['phenometrics']
 
-    plt.plot(dates_datetime64, ds_phenos['timeseries']['values'], color='blue', label='Raw NDVI') 
-    plt.plot(dates_datetime64, y_new, color='red', label='Smooth NDVI') 
+    pos_t_minus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
+    pos_t_plus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
+                
+    pos_t_minus = pos_t_minus - timedelta(days=5)
+    pos_t_plus = pos_t_plus + timedelta(days=5)
 
-    p = ds_phenos["phenometrics"]
+    fig = go.Figure()
 
-    sos_time = datetime.strptime(p['sos_t'], '%Y-%m-%dT00:00:00')
-    plt.plot(sos_time, p['sos_v'], 'go', label='_nolegend_')
-    plt.annotate('SOS', [sos_time, p['sos_v']])
+    fig.add_trace(go.Scatter(
+        name='LIOS',
+        mode="lines", 
+        x=[phenometrics['sos_t'].split('T')[0], phenometrics['sos_t'].split('T')[0], phenometrics['pos_t'].split('T')[0], phenometrics['eos_t'].split('T')[0], phenometrics["eos_t"].split('T')[0]],
+        y=[0, phenometrics["sos_v"], phenometrics["pos_v"], phenometrics["eos_v"], 0],
+        fill='toself',
+        showlegend=False,
+        fillcolor='rgba(153, 247, 254, 0.4)',
+        line=dict(color= 'rgba(153, 247, 254, 0.4)')
+    ))
 
-    eos_time = datetime.strptime(p['eos_t'], '%Y-%m-%dT00:00:00')
-    plt.plot(eos_time, p['eos_v'], 'go', label='_nolegend_')
-    plt.annotate('EOS', [eos_time, p['eos_v']])
+    fig.add_trace(go.Scatter(
+        name=cube['band'],
+        x=timeline,
+        y=timeseries,
+        line=dict(color='#17BECF') 
+    ))
 
-    pos_time = datetime.strptime(p['pos_t'], '%Y-%m-%dT00:00:00')
-    plt.plot(pos_time, p['pos_v'], 'go', label='_nolegend_')
-    plt.annotate('POS', [pos_time, p['pos_v']])
+    fig.add_trace(go.Scatter(
+        name="Smooth " + cube['band'],
+        x=timeline,
+        y=y_new,
+        line=dict(color='#ff0000') 
+    ))
 
-    vos_time = datetime.strptime(p['vos_t'], '%Y-%m-%dT00:00:00')
-    plt.plot(vos_time, p['vos_v'], 'go', label='_nolegend_')
-    plt.annotate('VOS', [vos_time, p['vos_v']])
+    fig.add_trace(go.Scatter(
+        name='LOS',
+        mode="lines", 
+        x=[phenometrics["sos_t"].split('T')[0], phenometrics["eos_t"].split('T')[0]],
+        y=[phenometrics["sos_v"], phenometrics["eos_v"]],
+        showlegend=False,
+        line=dict(color='#000000', dash='dashdot')
+    ))
 
-    plt.axvspan(sos_time, eos_time, color='#9af8ff')
+    fig.add_trace(go.Scatter(
+        name='AOS',
+        mode="lines", 
+        x=[phenometrics["pos_t"].split('T')[0], phenometrics["pos_t"].split('T')[0]],
+        y=[phenometrics["pos_v"], 0],
+        showlegend=False,
+        line=dict(color='#000000', dash='dashdot')
+    ))
 
-    plt.ylabel('Vegetation Health (NDVI)')
-    plt.xlabel('Date')
-    plt.legend(loc="upper left")
+    fig.add_trace(go.Scatter(
+        name='SOS',
+        mode="markers", 
+        x=[phenometrics['sos_t'].split('T')[0]],
+        y=[phenometrics['sos_v']],
+        marker=dict(color='#008c00', size=12, line=dict(color= '#000000', width= 2) )
+    ))
+    
+    fig.add_trace(go.Scatter(
+        name='POS',
+        mode="markers",  
+        x=[phenometrics["pos_t"].split('T')[0]],
+        y=[phenometrics["pos_v"]],
+        marker=dict(color='#0009e3', size=12, line=dict(color='#000000', width=2 ) )
+    ))
+    
+    fig.add_trace(go.Scatter(
+        name='EOS',
+        mode="markers", 
+        x=[phenometrics["eos_t"].split('T')[0]],
+        y=[phenometrics["eos_v"]],
+        marker=dict(color='#8a6100', size=12, line=dict(color='#000000', width=2 ) )
+    ))
+    
+    fig.add_trace(go.Scatter(
+        name='VOS',
+        mode="markers", 
+        x=[phenometrics["vos_t"].split('T')[0]],
+        y=[phenometrics["vos_v"]],
+        marker=dict(color='#e35400', size=12, line=dict(color='#000000', width=2 ) )
+    ))
+    
+    fig.show()
 
+def plot_advanced_phenometrics(cube, ds_phenos):
+
+    y_new = smooth_timeseries(ts=ds_phenos['timeseries'], method='savitsky', window_length=3)
+    
+    timeline = ds_phenos['timeline'][:21]
+    timeseries = ds_phenos['timeseries'][:21]
+    phenometrics = ds_phenos['phenometrics']
+
+    pos_t_minus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
+    pos_t_plus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
+                
+    pos_t_minus = pos_t_minus - timedelta(days=5)
+    pos_t_plus = pos_t_plus + timedelta(days=5)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        name='LIOS',
+        mode="lines", 
+        x=[phenometrics['sos_t'].split('T')[0], phenometrics['sos_t'].split('T')[0], phenometrics['pos_t'].split('T')[0], phenometrics['eos_t'].split('T')[0], phenometrics["eos_t"].split('T')[0]],
+        y=[0, phenometrics["sos_v"], phenometrics["pos_v"], phenometrics["eos_v"], 0],
+        fill='toself',
+        showlegend=False,
+        fillcolor='rgba(153, 247, 254, 0.4)',
+        line=dict(color= 'rgba(153, 247, 254, 0.4)')
+    ))
+
+    fig.add_trace(go.Scatter(
+        name=cube['band'],
+        x=timeline,
+        y=timeseries,
+        line=dict(color='#17BECF') 
+    ))
+
+    fig.add_trace(go.Scatter(
+        name="Smooth " + cube['band'],
+        x=timeline,
+        y=y_new,
+        line=dict(color='#ff0000') 
+    ))
+
+    fig.add_trace(go.Scatter(
+        name='AOS',
+        mode="lines", 
+        x=[phenometrics["pos_t"].split('T')[0], phenometrics["pos_t"].split('T')[0]],
+        y=[phenometrics["pos_v"], 0],
+        showlegend=False,
+        line=dict(color='#000000', dash='dashdot')
+    ))
+
+    fig.add_trace(go.Scatter(
+        name='SOS',
+        mode="markers", 
+        x=[phenometrics['sos_t'].split('T')[0]],
+        y=[phenometrics['sos_v']],
+        marker=dict(color='#008c00', size=12, line=dict(color= '#000000', width= 2) )
+    ))
+    
+    fig.add_trace(go.Scatter(
+        name='POS',
+        mode="markers",  
+        x=[phenometrics["pos_t"].split('T')[0]],
+        y=[phenometrics["pos_v"]],
+        marker=dict(color='#0009e3', size=12, line=dict(color='#000000', width=2 ) )
+    ))
+    
+    
+    fig.add_trace(go.Scatter(
+        name='VOS',
+        mode="markers", 
+        x=[phenometrics["vos_t"].split('T')[0]],
+        y=[phenometrics["vos_v"]],
+        marker=dict(color='#e35400', size=12, line=dict(color='#000000', width=2 ) )
+    ))
+
+    fig.add_trace(go.Scatter(
+        name='EOS',
+        mode="markers", 
+        x=[phenometrics["eos_t"].split('T')[0]],
+        y=[phenometrics["eos_v"]],
+        marker=dict(color='#8a6100', size=12, line=dict(color='#000000', width=2 ) )
+    ))
+    
+    sos_time = dt.strptime(phenometrics['sos_t'].split('T')[0], "%Y-%m-%d")
+    eos_time = dt.strptime(phenometrics['eos_t'].split('T')[0], "%Y-%m-%d")
+
+    fig.add_vrect(x0=sos_time - timedelta(days=16), x1=sos_time + timedelta(days=16), 
+              annotation_text="Uncertainty", annotation_position="top left", fillcolor="green", opacity=0.25, line_width=0)
+
+    fig.add_vrect(x0=eos_time - timedelta(days=16), x1=eos_time + timedelta(days=16), 
+              annotation_text="Uncertainty", annotation_position="top left", fillcolor="green", opacity=0.25, line_width=0)
+
+    fig.show()
+    
 def get_collections(url):
     """List available data cubes in the BDC's SpatioTemporal Asset Catalogs (STAC).
 
@@ -261,87 +420,27 @@ def gpd_read_file(shapefile_dir):
 def gdf_to_geojson(df):
     return json.loads(df.to_json())["features"][0]['geometry']
 
-def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing=None, end_sowing=None, start_harvesting=None, end_harvesting=None):
-
-    ts = [] 
-    tl = []
-    if (ds_phenos['timeseries']):
-        ts = ds_phenos['timeseries']   
-        tl = ds_phenos['timeline']   
-    else:
-        ts = ds_phenos['timeseries']['values'] 
-        tl = ds_phenos['timeseries']["timeline"]
-
-    dates_datetime64 = pd.date_range(pd.to_datetime(cube['start_date'], format='%Y-%m-%d'), periods=len(tl), freq="16D")
-
-    y_new = smooth_timeseries(ts=ts, method='savitsky', window_length=2)
-
-    plt.plot(dates_datetime64, ts, color='blue', label='Raw NDVI') 
-    plt.plot(dates_datetime64, y_new, color='red', label='Smooth NDVI') 
-
-    p = ds_phenos["phenometrics"]
-
-    sos_time = datetime.strptime(p['sos_t'], '%Y-%m-%dT00:00:00')
-    plt.plot(sos_time, p['sos_v'], 'go', label='_nolegend_')
-    plt.annotate('SOS', [sos_time, p['sos_v']])
-
-    eos_time = datetime.strptime(p['eos_t'], '%Y-%m-%dT00:00:00')
-    plt.plot(eos_time, p['eos_v'], 'go', label='_nolegend_')
-    plt.annotate('EOS', [eos_time, p['eos_v']])
-
-    pos_time = datetime.strptime(p['pos_t'], '%Y-%m-%dT00:00:00')
-    plt.plot(pos_time, p['pos_v'], 'go', label='_nolegend_')
-    plt.annotate('POS', [pos_time, p['pos_v']])
-
-    vos_time = datetime.strptime(p['vos_t'], '%Y-%m-%dT00:00:00')
-    plt.plot(vos_time, p['vos_v'], 'go', label='_nolegend_')
-    plt.annotate('VOS', [vos_time, p['vos_v']])
-
-    plt.axvspan(sos_time-timedelta(days=16), sos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB')
-    plt.axvspan(eos_time-timedelta(days=16), eos_time+timedelta(days=16), alpha=0.5, color='#4CBCCB', label="Uncertainty")
-
-    if (start_sowing and end_sowing):
-        v_start_sowing = shape.loc[0, start_sowing]
-        v_end_sowing = shape.loc[0, end_sowing]
-        plt.axvspan(v_start_sowing, v_end_sowing, color='#099c00', alpha=0.4, label=start_sowing.replace("_inicio", ""))
-    
-    if (start_harvesting and end_harvesting):
-        v_start_harvesting = shape.loc[0, start_harvesting]  
-        v_end_harvesting = shape.loc[0, end_harvesting]
-        plt.axvspan(v_start_harvesting, v_end_harvesting, color='#e3c913', alpha=0.4, label=end_harvesting.replace("_fim", ""))
-
-    plt.ylabel('Vegetation Health (NDVI)')
-    plt.xlabel('Date')
-
-    plt.legend(loc='center right', bbox_to_anchor=(1.35, 0.5))
-
 def plot_points_region(polygon, phenos):
     x, y = [],[]
     for p in phenos:
         x.append(p["point"][0])
         y.append(p["point"][1])
-    gpd.GeoSeries(polygon["geometry"]).plot(color='red', alpha=0.25)
-    plt.scatter(x,y) 
-    plt.show() 
+    df = gpd.GeoSeries(polygon["geometry"])
+    fig = px.scatter(df, x=x, y=y)
+    fig.show()
 
-def get_phenometrics_region(url, cube, geom, method, distance=None, plot_size=None):
-    """List phenological metrics calculated for each of the given spatial location based on selected region methodology (all, systematic or random grid).
+def get_timeseries_region(url, cube, geom):
+    """Retrieves the satellite images time series for each pixel centers within the boundaries of the given region from the Brazil Data Cube catalog.
 
     Args:
         url: The url of the available wcpms service running.
 
         cube : Dictionary with information about a BDC's data cubes with collection, start_date, end_date, freq and band.
 
-        geom : GeoJSON containing the geometry used to retrive phenological metrics, according to EPSG:4326.
-        
-        method : String containing the region methodology of images of the associated collection. The (1) all the pixels; (2) systematic grid, a N meter neighborhood distance rule; (3) random grid, N points distributed at random.
-
-        distance (optional) : Float containing the N (number) meter neighborhood distance rule. Used on the 'systematic' method.
-        
-        plot_size (optional) : Int containing the N (number) of plots to be distributed at random. Used on the 'random' method.
+        geom : GeoJSON containing the geometry used to retrive time series, according to EPSG:4326.
  
     Returns:
-    list: A list of dictionaries with phenological metrics calculated for each of the given spatial location.
+    list: A list of dictionaries with satellite images time series for each pixel.
 
     
     Raises:
@@ -355,12 +454,43 @@ def get_phenometrics_region(url, cube, geom, method, distance=None, plot_size=No
         start_date=cube['start_date'],
         end_date=cube['end_date'],
         freq=cube['freq'],
-        geom=geom,
-        method = dict(
-            grid_type = method,
-            plot_size = plot_size,
-            distance = distance
-        )
+        geom=geom
+    )
+
+    url_suffix = '/timeseries'
+
+    data = requests.post(url + url_suffix, json = body) 
+
+    data_json = data.json()
+    
+    return data_json['result']
+    
+def get_phenometrics_region(url, cube, timeseries):
+    """List phenological metrics calculated for each spatial location within the boundaries of the given region.
+
+    Args:
+        url: The url of the available wcpms service running.
+
+        cube : Dictionary with information about a BDC's data cubes with collection, start_date, end_date, freq and band.
+
+        timeseries : JSON containing a list of dictionaries with satellite images time series for each pixel.
+ 
+    Returns:
+    list: A list of dictionaries with phenological metrics calculated for each pixel centers.
+
+    
+    Raises:
+        ConnectionError: If the server is not reachable.
+        HTTPError: If the server response indicates an error.
+        ValueError: If the response body is not a json document.
+    """
+    body = dict(
+        collection=cube['collection'],
+        band=cube['band'],
+        start_date=cube['start_date'],
+        end_date=cube['end_date'],
+        freq=cube['freq'],
+        timeseries=timeseries
     )
 
     url_suffix = '/phenometrics'
@@ -369,3 +499,13 @@ def get_phenometrics_region(url, cube, geom, method, distance=None, plot_size=No
     data_json = data.json()
 
     return data_json['result']
+
+def plot_points_region(polygon, phenos):
+    x, y = [],[]
+    for p in phenos:
+        x.append(p["point"][0])
+        y.append(p["point"][1])
+    df = gpd.GeoSeries(polygon["geometry"])
+    geo_axes = df.plot()
+    geo_axes.scatter(x, y, c='red')
+    geo_axes.plot()
