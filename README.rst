@@ -58,10 +58,9 @@ Called Web Crop Phenology Metrics Service (WCPMS) the software extracts phenolog
 
 It allows analysts to calculate phenological metrics on cloud. The opposite of the on-premises established algorithms, so with no need to download big EO data sets on their personal computers. 
 
-We created the wcpms.py library from scratch to facilitate phenology extraction operations. This li
-brary was developed to be interoperable with other Python libraries, thus enabling users to integrate established libraries into their own workflows for pre- or post-processing and analysis. The wcpms.py library has a group of functions, the main ones are:
+We created the wcpms.py library from scratch to facilitate phenology extraction operations. This library was developed to be interoperable with other Python libraries, thus enabling users to integrate established libraries into their own workflows for pre- or post-processing and analysis. The wcpms.py library has a group of functions, the main ones are:
 
-- ``get_collections``: returns in list format the unique identifier of each of the data cubes available in the BDC’s SpatioTemporal Asset Catalogs (STAC).
+- ``get_collections``: returns in list format the unique identifier of each of the data cubes available in the BDC's SpatioTemporal Asset Catalogs (STAC).
 
 - ``get_description``: returns in dictionary format the information on each of the phenology metrics, such as code, name, description and method. 	
 
