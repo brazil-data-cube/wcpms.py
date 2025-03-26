@@ -21,15 +21,18 @@
 import os
 import json
 import urllib
+import warnings
 import requests
 import pandas as pd
 import geopandas as gpd
 import plotly.express as px
+from datetime import timedelta
 import plotly.graph_objects as go
 from scipy.signal import savgol_filter
 from IPython.core.display import display, HTML
 from datetime import datetime as dt
-from datetime import timedelta
+
+warnings.filterwarnings("ignore")
 
 class WCPMS:
     """Implement a client for WCPMS.
@@ -253,12 +256,12 @@ def plot_phenometrics(cube, ds_phenos):
     
     fig.show()
 
-def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing=None, end_sowing=None, start_harvesting=None, end_harvesting=None):
+def plot_advanced_phenometrics(cube, ds_phenos):
 
-    y_new = smooth_timeseries(ts=ds_phenos['timeseries']['values'], method='savitsky', window_length=3)
+    y_new = smooth_timeseries(ts=ds_phenos['timeseries'], method='savitsky', window_length=3)
     
-    timeline = ds_phenos['timeseries']['timeline']
-    timeseries = ds_phenos['timeseries']['values']
+    timeline = ds_phenos['timeline'][:21]
+    timeseries = ds_phenos['timeseries'][:21]
     phenometrics = ds_phenos['phenometrics']
 
     pos_t_minus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
@@ -295,15 +298,6 @@ def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing=None, end_so
     ))
 
     fig.add_trace(go.Scatter(
-        name='LOS',
-        mode="lines", 
-        x=[phenometrics["sos_t"].split('T')[0], phenometrics["eos_t"].split('T')[0]],
-        y=[phenometrics["sos_v"], phenometrics["eos_v"]],
-        showlegend=False,
-        line=dict(color='#000000', dash='dashdot')
-    ))
-
-    fig.add_trace(go.Scatter(
         name='AOS',
         mode="lines", 
         x=[phenometrics["pos_t"].split('T')[0], phenometrics["pos_t"].split('T')[0]],
@@ -328,13 +322,6 @@ def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing=None, end_so
         marker=dict(color='#0009e3', size=12, line=dict(color='#000000', width=2 ) )
     ))
     
-    fig.add_trace(go.Scatter(
-        name='EOS',
-        mode="markers", 
-        x=[phenometrics["eos_t"].split('T')[0]],
-        y=[phenometrics["eos_v"]],
-        marker=dict(color='#8a6100', size=12, line=dict(color='#000000', width=2 ) )
-    ))
     
     fig.add_trace(go.Scatter(
         name='VOS',
@@ -342,6 +329,14 @@ def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing=None, end_so
         x=[phenometrics["vos_t"].split('T')[0]],
         y=[phenometrics["vos_v"]],
         marker=dict(color='#e35400', size=12, line=dict(color='#000000', width=2 ) )
+    ))
+
+    fig.add_trace(go.Scatter(
+        name='EOS',
+        mode="markers", 
+        x=[phenometrics["eos_t"].split('T')[0]],
+        y=[phenometrics["eos_v"]],
+        marker=dict(color='#8a6100', size=12, line=dict(color='#000000', width=2 ) )
     ))
     
     sos_time = dt.strptime(phenometrics['sos_t'].split('T')[0], "%Y-%m-%d")
@@ -353,20 +348,8 @@ def plot_advanced_phenometrics(cube, ds_phenos, shape, start_sowing=None, end_so
     fig.add_vrect(x0=eos_time - timedelta(days=16), x1=eos_time + timedelta(days=16), 
               annotation_text="Uncertainty", annotation_position="top left", fillcolor="green", opacity=0.25, line_width=0)
 
-    if (start_sowing and end_sowing):
-        v_start_sowing = shape.loc[0, start_sowing]
-        v_end_sowing = shape.loc[0, end_sowing]
-        fig.add_vrect(x0=v_start_sowing, x1=v_end_sowing, 
-              annotation_text=start_sowing.replace("_inicio", ""), annotation_position="top left", fillcolor="#099c00", opacity=0.25, line_width=0)
-
-    if (start_harvesting and end_harvesting):
-        v_start_harvesting = shape.loc[0, start_harvesting]  
-        v_end_harvesting = shape.loc[0, end_harvesting]
-        fig.add_vrect(x0=v_start_harvesting, x1=v_end_harvesting, 
-              annotation_text=end_harvesting.replace("_fim", ""), annotation_position="top left", fillcolor="#e3c913", opacity=0.25, line_width=0)
-
     fig.show()
-
+    
 def get_collections(url):
     """List available data cubes in the BDC's SpatioTemporal Asset Catalogs (STAC).
 
@@ -446,24 +429,18 @@ def plot_points_region(polygon, phenos):
     fig = px.scatter(df, x=x, y=y)
     fig.show()
 
-def get_phenometrics_region(url, cube, geom, method, distance=None, plot_size=None):
-    """List phenological metrics calculated for each of the given spatial location based on selected region methodology (all, systematic or random grid).
+def get_timeseries_region(url, cube, geom):
+    """Retrieves the satellite images time series for each pixel centers within the boundaries of the given region from the Brazil Data Cube catalog.
 
     Args:
         url: The url of the available wcpms service running.
 
         cube : Dictionary with information about a BDC's data cubes with collection, start_date, end_date, freq and band.
 
-        geom : GeoJSON containing the geometry used to retrive phenological metrics, according to EPSG:4326.
-        
-        method : String containing the region methodology of images of the associated collection. The (1) all the pixels; (2) systematic grid, a N meter neighborhood distance rule; (3) random grid, N points distributed at random.
-
-        distance (optional) : Float containing the N (number) meter neighborhood distance rule. Used on the 'systematic' method.
-        
-        plot_size (optional) : Int containing the N (number) of plots to be distributed at random. Used on the 'random' method.
+        geom : GeoJSON containing the geometry used to retrive time series, according to EPSG:4326.
  
     Returns:
-    list: A list of dictionaries with phenological metrics calculated for each of the given spatial location.
+    list: A list of dictionaries with satellite images time series for each pixel.
 
     
     Raises:
@@ -477,12 +454,43 @@ def get_phenometrics_region(url, cube, geom, method, distance=None, plot_size=No
         start_date=cube['start_date'],
         end_date=cube['end_date'],
         freq=cube['freq'],
-        geom=geom,
-        method = dict(
-            grid_type = method,
-            plot_size = plot_size,
-            distance = distance
-        )
+        geom=geom
+    )
+
+    url_suffix = '/timeseries'
+
+    data = requests.post(url + url_suffix, json = body) 
+
+    data_json = data.json()
+    
+    return data_json['result']
+    
+def get_phenometrics_region(url, cube, timeseries):
+    """List phenological metrics calculated for each spatial location within the boundaries of the given region.
+
+    Args:
+        url: The url of the available wcpms service running.
+
+        cube : Dictionary with information about a BDC's data cubes with collection, start_date, end_date, freq and band.
+
+        timeseries : JSON containing a list of dictionaries with satellite images time series for each pixel.
+ 
+    Returns:
+    list: A list of dictionaries with phenological metrics calculated for each pixel centers.
+
+    
+    Raises:
+        ConnectionError: If the server is not reachable.
+        HTTPError: If the server response indicates an error.
+        ValueError: If the response body is not a json document.
+    """
+    body = dict(
+        collection=cube['collection'],
+        band=cube['band'],
+        start_date=cube['start_date'],
+        end_date=cube['end_date'],
+        freq=cube['freq'],
+        timeseries=timeseries
     )
 
     url_suffix = '/phenometrics'
@@ -491,3 +499,13 @@ def get_phenometrics_region(url, cube, geom, method, distance=None, plot_size=No
     data_json = data.json()
 
     return data_json['result']
+
+def plot_points_region(polygon, phenos):
+    x, y = [],[]
+    for p in phenos:
+        x.append(p["point"][0])
+        y.append(p["point"][1])
+    df = gpd.GeoSeries(polygon["geometry"])
+    geo_axes = df.plot()
+    geo_axes.scatter(x, y, c='red')
+    geo_axes.plot()

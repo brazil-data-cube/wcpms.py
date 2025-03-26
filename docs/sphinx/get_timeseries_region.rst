@@ -16,30 +16,8 @@
     along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 
 
-.. _Examples:
-
-Examples
-========
+Timeseries (region)
+---------------------
 
 
-List Available Collections
---------------------------
-
-
-This example shows how to list with avaliable data cubes from Brazil Data Cube (BDC):
-
-.. literalinclude:: ../../examples/get_collections.py
-   :language: python
-   :lines: 21-
-
-
-Phenometrics
--------------
-
-
-This example shows how to retrieve and plot a time series with phenological metrics:
-
-.. literalinclude:: ../../examples/phenometrics.py
-   :language: python
-   :lines: 21-
-
+.. autofunction:: wcpms.wcpms.get_timeseries_region

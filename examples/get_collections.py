@@ -29,5 +29,3 @@ colections=get_collections(
 )
 
 print(colections)
-
-
