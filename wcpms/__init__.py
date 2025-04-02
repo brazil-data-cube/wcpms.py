@@ -18,4 +18,4 @@
 
 """Python Client Library for Web Crop Phenology Metrics Service"""
 
-from .wcpms import WCPMS, cube_query, get_phenometrics, plot_phenometrics, get_collections, get_description, gpd_read_file, get_phenometrics_region, gdf_to_geojson, plot_advanced_phenometrics,plot_points_region
+from .wcpms import WCPMS, cube_query, get_phenometrics, plot_points_region, plot_phenometrics, get_collections, get_description, gpd_read_file,get_timeseries_region,get_phenometrics_region, gdf_to_geojson, plot_advanced_phenometrics,plot_points_region
