@@ -19,6 +19,14 @@
 Changes
 =======
 
+Version 0.2.0 (2025-04-02)
+--------------------------
+- Added get_collections Example - Included a practical usage example for the get_collections function.
+- Reworked Plot Function Using Plotly - Updated the plotting function to Plotly, instead of matplotlib, for interactive and dynamic visualizations.
+- Reworked get_phenometrics_region Function - List phenological metrics calculated for each spatial location within the boundaries of the given region.
+- Added get_timeseries_region Function - New function to retrieves the satellite images time series for each pixel centers within the boundaries of the given region.
+- Remade Jupyter Notebooks - Updated and restructured Jupyter notebooks to reflect new functionalities, and add step-by-step guidance for users.
+- Updated Documentation - Revised and expanded documentation to include new features and improve readability.
 
 Version 0.1.0 (2025-03-10)
 --------------------------
