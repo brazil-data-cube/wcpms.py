@@ -1,6 +1,6 @@
 ..
     This file is part of Python Client Library for WCPMS.
-    Copyright (C) 2024 INPE.
+    Copyright (C) 2025 INPE.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,5 +22,24 @@ Examples
 ========
 
 
+List Available Collections
+--------------------------
 
+
+This example shows how to list with avaliable data cubes from Brazil Data Cube (BDC):
+
+.. literalinclude:: ../../examples/get_collections.py
+   :language: python
+   :lines: 21-
+
+
+Phenometrics
+-------------
+
+
+This example shows how to retrieve and plot a time series with phenological metrics:
+
+.. literalinclude:: ../../examples/phenometrics.py
+   :language: python
+   :lines: 21-
 
