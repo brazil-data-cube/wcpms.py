@@ -25,7 +25,7 @@ import warnings
 import requests
 import pandas as pd
 import geopandas as gpd
-import plotly.express as pxvcode github
+import plotly.express as pxvcode
 from datetime import timedelta
 import plotly.graph_objects as go
 from scipy.signal import savgol_filter
