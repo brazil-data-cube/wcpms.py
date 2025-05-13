@@ -19,7 +19,7 @@
 Changes
 =======
 
-Version 0.3.0 (2025-05-13)
+Version 0.3.1 (2025-05-13)
 --------------------------
 - Removed dependency on `ipython==8.26.0` as it's no longer required.
 - Removed `display(HTML)` usage from IPython client in `get_description` function.
