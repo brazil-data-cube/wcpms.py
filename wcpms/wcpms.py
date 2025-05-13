@@ -25,11 +25,10 @@ import warnings
 import requests
 import pandas as pd
 import geopandas as gpd
-import plotly.express as px
+import plotly.express as pxvcode
 from datetime import timedelta
 import plotly.graph_objects as go
 from scipy.signal import savgol_filter
-from IPython.core.display import display, HTML
 from datetime import datetime as dt
 
 warnings.filterwarnings("ignore")
@@ -411,8 +410,8 @@ def get_description(url):
     for item in data_json['description']:
         html_table+='<tr>'+'<td>'+item['Code']+'</td>'+'<td>'+item['Name']+'</td>'+'<td>'+item['Description']+'</td>'+'<td>'+item['Method']+'</td>'+'<td>'+str(item['Value'])+'</td>'+'<td>'+str(item['Time'])+'</td>'+'</tr>'
     
-    return display(HTML('<table style="width:90%;margin-left:5%;margin-right:5%;margin-top:5%;">'+html_table+'</table>')) 
-
+    return data_json['description']
+    
 def gpd_read_file(shapefile_dir):
     data = gpd.read_file(os.path.join(shapefile_dir))
     return data
