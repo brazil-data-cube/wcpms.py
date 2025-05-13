@@ -44,7 +44,6 @@ install_requires = [
         "plotly==6.0.1",
         "scipy==1.13.1",
         "datetime==5.5",
-        "ipython==8.26.0",
         "geopandas==1.0.1 "
 ]
 
