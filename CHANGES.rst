@@ -19,6 +19,13 @@
 Changes
 =======
 
+Version 0.3.0 (2025-05-13)
+--------------------------
+- Removed dependency on `ipython==8.26.0` as it's no longer required.
+- Removed `display(HTML)` usage from IPython client in `get_description` function.
+- Fixed imports of `plotly.express` to use proper alias import.
+- Updated documentation format to use pure JSON instead of IPython HTML display.
+
 Version 0.2.0 (2025-04-02)
 --------------------------
 - Added get_collections Example - Included a practical usage example for the get_collections function.
