@@ -19,6 +19,12 @@
 Changes
 =======
 
+Version 0.3.2 (2025-06-04)
+--------------------------
+- Added new Jupyter Notebooks `wcpms-introduction.ipynb` and `wcpms-phenometrics-region.ipynb`  
+- Included example dataset `LEM_dataset_small.gpkg` for `wcpms-phenometrics-region` notebooks  
+- Restructured `notebooks/` with dedicated `Data/` and `Python/wcpms/` folders 
+
 Version 0.3.1 (2025-05-13)
 --------------------------
 - Removed dependency on `ipython==8.26.0` as it's no longer required.
