@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
 
-.. image:: https://raw.githubusercontent.com/brazil-data-cube/wcpms/main/docs/img/wcpms_logo.png
+.. image:: https://raw.githubusercontent.com/brazil-data-cube/wcpms.py/master/docs/sphinx/img/wcpms_logo.png
    :width: 300
    :align: center
    :alt: wcpms logo
@@ -23,6 +23,10 @@
 ============================================================
 Python Client Library for Web Crop Phenology Metrics Service
 ============================================================
+
+.. image:: https://zenodo.org/badge/DOI/10.1080/20964471.2026.2641272.svg
+        :target: https://doi.org/10.1080/20964471.2026.2641272
+        :alt: doi
 
 
 .. image:: https://img.shields.io/badge/License-GPLv3-blue.svg
@@ -94,8 +98,7 @@ See https://wcpms.readthedocs.io/en/latest.
 References
 ==========
 
-
-WIP
+Sansigolo, G., Reis Ferreira, K., De Queiroz, G. R., Körting, T., Pereira Garcia Leão, L., & Adami, M. (2026). A tool for crop phenology metrics analysis from big Earth observation data. Big Earth Data, 1–24. https://doi.org/10.1080/20964471.2026.2641272
 
 
 License
