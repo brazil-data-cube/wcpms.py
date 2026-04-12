@@ -19,6 +19,11 @@
 Changes
 =======
 
+Version 0.3.4 (2026-03-26)
+--------------------------
+- Update README.rst and documentation
+- Update Jupyter Notebooks `wcpms-introduction.ipynb` and `wcpms-phenometrics-region.ipynb`  
+
 Version 0.3.3 (2026-02-04)
 --------------------------
 - Update README.rst and documentation
