@@ -19,6 +19,13 @@
 Changes
 =======
 
+Version 0.4 (2026-07-17)
+--------------------------
+- Update dependency versions: `urllib3==2.5.0` and `requests==2.32.4` to comply with security vulnerability analysis.
+- Refactor `plot_phenometrics`, `plot_advanced_phenometrics`, and `plot_points_region`: Updated to solve Jupyter rendering errors.
+- Add `conda-environment.txt`: Provided new step-by-step instructions to create the optimized conda environment for wcpms.py.
+- Update Jupyter Notebooks `wcpms-introduction.ipynb` and `wcpms-phenometrics-region.ipynb`. 
+
 Version 0.3.4 (2026-03-26)
 --------------------------
 - Update README.rst and documentation
