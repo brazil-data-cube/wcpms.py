@@ -38,8 +38,8 @@ docs_require = [
 ]
 
 install_requires = [
-        "urllib3==2.2.2",
-        "requests==2.32.3",
+        "urllib3==2.5.0",
+        "requests==2.32.4",
         "pandas==2.2.2",
         "plotly==6.0.1",
         "scipy==1.13.1",

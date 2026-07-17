@@ -23,13 +23,13 @@ import json
 import urllib
 import warnings
 import requests
-import pandas as pd
 import geopandas as gpd
-import plotly.express as pxvcode
+import plotly.express as px
 from datetime import timedelta
 import plotly.graph_objects as go
 from scipy.signal import savgol_filter
 from datetime import datetime as dt
+import plotly.graph_objects as go
 
 warnings.filterwarnings("ignore")
 
@@ -163,18 +163,11 @@ def smooth_timeseries(ts, method='savitsky', window_length=3, polyorder=1):
     return smooth_ts
 
 def plot_phenometrics(cube, ds_phenos):
-
     y_new = smooth_timeseries(ts=ds_phenos['timeseries']['values'], method='savitsky', window_length=3)
     
     timeline = ds_phenos['timeseries']['timeline']
     timeseries = ds_phenos['timeseries']['values']
     phenometrics = ds_phenos['phenometrics']
-
-    pos_t_minus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
-    pos_t_plus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
-                
-    pos_t_minus = pos_t_minus - timedelta(days=5)
-    pos_t_plus = pos_t_plus + timedelta(days=5)
 
     fig = go.Figure()
 
@@ -252,22 +245,15 @@ def plot_phenometrics(cube, ds_phenos):
         y=[phenometrics["vos_v"]],
         marker=dict(color='#e35400', size=12, line=dict(color='#000000', width=2 ) )
     ))
-    
-    fig.show()
+
+    return fig.show()
 
 def plot_advanced_phenometrics(cube, ds_phenos):
-
     y_new = smooth_timeseries(ts=ds_phenos['timeseries'], method='savitsky', window_length=3)
     
     timeline = ds_phenos['timeline'][:21]
     timeseries = ds_phenos['timeseries'][:21]
     phenometrics = ds_phenos['phenometrics']
-
-    pos_t_minus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
-    pos_t_plus = dt.strptime(phenometrics['pos_t'].split('T')[0], "%Y-%m-%d")
-                
-    pos_t_minus = pos_t_minus - timedelta(days=5)
-    pos_t_plus = pos_t_plus + timedelta(days=5)
 
     fig = go.Figure()
 
@@ -321,7 +307,6 @@ def plot_advanced_phenometrics(cube, ds_phenos):
         marker=dict(color='#0009e3', size=12, line=dict(color='#000000', width=2 ) )
     ))
     
-    
     fig.add_trace(go.Scatter(
         name='VOS',
         mode="markers", 
@@ -346,9 +331,9 @@ def plot_advanced_phenometrics(cube, ds_phenos):
 
     fig.add_vrect(x0=eos_time - timedelta(days=16), x1=eos_time + timedelta(days=16), 
               annotation_text="Uncertainty", annotation_position="top left", fillcolor="green", opacity=0.25, line_width=0)
-
-    fig.show()
     
+    return fig.show()
+
 def get_collections(url):
     """List available data cubes in the BDC's SpatioTemporal Asset Catalogs (STAC).
 
@@ -420,13 +405,12 @@ def gdf_to_geojson(df):
     return json.loads(df.to_json())["features"][0]['geometry']
 
 def plot_points_region(polygon, phenos):
-    x, y = [],[]
-    for p in phenos:
-        x.append(p["point"][0])
-        y.append(p["point"][1])
-    df = gpd.GeoSeries(polygon["geometry"])
-    fig = px.scatter(df, x=x, y=y)
-    fig.show()
+    x_coords = [p["point"][0] for p in phenos]
+    y_coords = [p["point"][1] for p in phenos]
+    
+    fig = px.scatter(x=x_coords, y=y_coords)
+    
+    return fig.show()
 
 def get_timeseries_region(url, cube, geom):
     """Retrieves the satellite images time series for each pixel centers within the boundaries of the given region from the Brazil Data Cube catalog.
@@ -498,13 +482,3 @@ def get_phenometrics_region(url, cube, timeseries):
     data_json = data.json()
 
     return data_json['result']
-
-def plot_points_region(polygon, phenos):
-    x, y = [],[]
-    for p in phenos:
-        x.append(p["point"][0])
-        y.append(p["point"][1])
-    df = gpd.GeoSeries(polygon["geometry"])
-    geo_axes = df.plot()
-    geo_axes.scatter(x, y, c='red')
-    geo_axes.plot()

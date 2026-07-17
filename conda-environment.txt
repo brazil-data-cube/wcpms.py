@@ -1,0 +1,25 @@
+# 1. Create environment with Python 3.11
+conda create -n wcpms python=3.11 -y
+conda activate wcpms
+
+# 2. Install primary dependencies from conda-forge
+conda install -c conda-forge \
+    urllib3=2.5.0 \
+    requests=2.32.4 \
+    pandas=2.2.2 \
+    plotly=6.0.1 \
+    scipy=1.13.1 \
+    datetime=5.5 \
+    geopandas=1.0.1 -y
+
+# 3. Install documentation dependencies
+conda install -c conda-forge \
+    sphinx \
+    sphinx_rtd_theme \
+    build \
+    sphinx-copybutton -y
+
+# 4. Install testing dependencies
+conda install -c conda-forge \
+    pytest \
+    pytest-runner -y
