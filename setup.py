@@ -43,8 +43,7 @@ install_requires = [
         "pandas==2.2.2",
         "plotly==6.0.1",
         "scipy==1.13.1",
-        "datetime==5.5",
-        "geopandas==1.0.1 "
+        "datetime==5.5"
 ]
 
 extras_require = {
