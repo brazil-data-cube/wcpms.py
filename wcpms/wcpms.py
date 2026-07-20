@@ -23,7 +23,6 @@ import json
 import urllib
 import warnings
 import requests
-import geopandas as gpd
 import plotly.express as px
 from datetime import timedelta
 import plotly.graph_objects as go
@@ -397,9 +396,6 @@ def get_description(url):
     
     return data_json['description']
     
-def gpd_read_file(shapefile_dir):
-    data = gpd.read_file(os.path.join(shapefile_dir))
-    return data
 
 def gdf_to_geojson(df):
     return json.loads(df.to_json())["features"][0]['geometry']
