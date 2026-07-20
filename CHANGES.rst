@@ -19,6 +19,11 @@
 Changes
 =======
 
+Version 0.4.1 (2026-07-20)
+--------------------------
+- Remove geopandas dependency: `geopandas==1.0.1` to comply with security vulnerability analysis.
+
+
 Version 0.4 (2026-07-17)
 --------------------------
 - Update dependency versions: `urllib3==2.5.0` and `requests==2.32.4` to comply with security vulnerability analysis.
